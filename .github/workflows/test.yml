@@ -43,6 +43,7 @@ jobs:
         openssl:
           - libressl-3.5.3
           - libressl-3.6.0
+          - master
     steps:
       - name: repo checkout
         uses: actions/checkout@v2
@@ -58,6 +59,17 @@ jobs:
             ./Configure --prefix=$HOME/.openssl/${{ matrix.openssl }} --libdir=lib \
                 shared linux-x86_64
             make depend
+            ;;
+          master*)
+            git clone https://github.com/libressl-portable/portable
+            cd portable
+            ./autogen.sh
+            ./configure
+            make dist
+            tar zxvf libressl-*.tar.gz
+            rm libressl-*.tar.gz
+            cd libressl-*
+            ./configure --prefix=$HOME/.openssl/${{ matrix.openssl }}
             ;;
           libressl-*)
             curl -OL https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${{ matrix.openssl }}.tar.gz
