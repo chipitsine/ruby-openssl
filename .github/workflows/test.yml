@@ -7,6 +7,9 @@ jobs:
     name: >-
       ${{ matrix.os }} ${{ matrix.ruby }}
     runs-on: ${{ matrix.os }}
+    env:
+      CFLAGS: '-ggdb -fsanitize=address'
+      LDFLAGS: '-fsanitize=address'
     strategy:
       fail-fast: false
       matrix:
